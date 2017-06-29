@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+
+    <types>
+
+        <type type="types/verifier" icon="fa fa-check-circle-o">
+            <locale group="quiqqer/verification" var="site.types.verifier" />
+            <desc>
+                <locale group="quiqqer/verification" var="site.types.verifier.description" />
+            </desc>
+        </type>
+
+    </types>
+
+</site>

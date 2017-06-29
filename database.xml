@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+
+    <projects>
+        <table name="quiqqer_verification" no-site-reference="1" no-auto-update="1">
+            <field type="BIGINT(20) NOT NULL PRIMARY KEY">id</field>
+            <field type="VARCHAR(255) NOT NULL">identifier</field>
+            <field type="VARCHAR(255) NOT NULL">verificationHash</field>
+            <field type="TIMESTAMP NOT NULL">createDate</field>
+            <field type="TIMESTAMP NOT NULL">validUntilDate</field>
+            <field type="VARCHAR(255) NOT NULL">source</field>
+        </table>
+    </projects>
+
+</database>

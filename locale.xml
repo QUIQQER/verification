@@ -1,9 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <locales>
-  <groups name="quiqqer/verification" datatype="php,js">
-    <locale name="package.title">
-      <de><![CDATA[QUIQQER - Verifikation]]></de>
-      <en><![CDATA[QUIQQER - Verification]]></en>
-    </locale>
-  <locale name="package.description"><de><![CDATA[QUIQQER - Verifikation]]></de><en><![CDATA[QUIQQER - Verification]]></en></locale></groups>
+    <groups name="quiqqer/verification" datatype="php,js">
+
+        <!-- Package -->
+        <locale name="package.title">
+            <de><![CDATA[QUIQQER - Verifikation]]></de>
+            <en><![CDATA[QUIQQER - Verification]]></en>
+        </locale>
+        <locale name="package.description">
+            <de><![CDATA[QUIQQER - Verifikation]]></de>
+            <en><![CDATA[QUIQQER - Verification]]></en>
+        </locale>
+
+        <!-- Site types -->
+        <locale name="site.types.verifier">
+            <de><![CDATA[QUIQQER - Verifikator]]></de>
+            <en><![CDATA[QUIQQER - Verifier]]></en>
+        </locale>
+        <locale name="site.types.verifier.description">
+            <de><![CDATA[Seite, zu der der Nutzer hingeleitet wird, um einen Prozess zu verifizieren]]></de>
+            <en><![CDATA[Site to which the user is directed to verify a process]]></en>
+        </locale>
+
+    </groups>
+
+    <groups name="quiqqer/verification" datatype="php">
+        <locale name="exception.verifier.verification.already.exists">
+            <de><![CDATA[Ein Verifikations-Prozess mit dem Identifikator "[identifier]" existiert bereits.]]></de>
+            <en><![CDATA[A verification process with identifier "[identifier]" is already in progress.]]></en>
+        </locale>
+        <locale name="exception.verifier.verification.does.not.exists">
+            <de><![CDATA[Es existiert kein Verifikations-Prozess mit dem Identifikator "[identifier]".]]></de>
+            <en><![CDATA[A verification process with identifier "[identifier]" does not exist.]]></en>
+        </locale>
+        <locale name="exception.verifier.site.does.not.exist">
+            <de><![CDATA[Es wurde noch keine Verifikator-Seite angelegt.]]></de>
+            <en><![CDATA[A Verifier site has not been created yet.]]></en>
+        </locale>
+        <locale name="exception.verifier.verification.invalid.hash">
+            <de><![CDATA[Der Hash, der zur Verifizierung übergeben wurde, ist nicht korrekt.]]></de>
+            <en><![CDATA[The hash passed for verification is incorrect.]]></en>
+        </locale>
+    </groups>
 </locales>
