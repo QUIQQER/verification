@@ -3,23 +3,14 @@
 use QUI\Verification\Verifier;
 use QUI\Security\Encryption;
 
-/**
- * Send 401 status code if anything goes wrong
- */
-function sendGeneralError()
-{
-    global $Engine;
-
+if (empty($_REQUEST['hash'])
+    || empty($_REQUEST['verificationId'])
+) {
     $Engine->assign(array(
         'msg'     => QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.general'),
         'success' => false
     ));
-}
 
-if (empty($_REQUEST['hash'])
-    || empty($_REQUEST['verificationId'])
-) {
-    sendGeneralError();
     return;
 }
 
@@ -29,7 +20,11 @@ $verificationId = (int)$_REQUEST['verificationId'];
 try {
     $verificationData = Verifier::getVerificationData($verificationId);
 } catch (\Exception $Exception) {
-    sendGeneralError();
+    $Engine->assign(array(
+        'msg'     => QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.general'),
+        'success' => false
+    ));
+
     return;
 }
 
@@ -38,16 +33,20 @@ $VerificationClass = $verificationData['source'];
 $identifier        = $verificationData['identifier'];
 
 // verify data against hash
-$expected = Encryption::decrypt($verificationData['hash']);
+$expected = Encryption::decrypt($verificationData['verificationHash']);
 
 if ($_REQUEST['hash'] !== $expected) {
     $msg = $VerificationClass::getErrorMessage($identifier, Verifier::ERROR_REASON_INVALID_REQUEST);
 
     if (empty($msg)) {
-        sendGeneralError();
-    }
+        $Engine->assign(array(
+            'msg'     => QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.general'),
+            'success' => false
+        ));
 
-    return;
+        $VerificationClass::onSuccess($identifier);
+        return;
+    }
 } else {
     // if hash is correct, check validUntilDate
     $validUntil = strtotime($verificationData['validUntilDate']);
@@ -59,6 +58,7 @@ if ($_REQUEST['hash'] !== $expected) {
             $msg = QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.success');
         }
 
+        $VerificationClass::onSuccess($identifier);
         $success = true;
     } else {
         $msg = $VerificationClass::getErrorMessage($identifier, Verifier::ERROR_REASON_EXPIRED);
@@ -66,6 +66,8 @@ if ($_REQUEST['hash'] !== $expected) {
         if (empty($msg)) {
             $msg = QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.expired');
         }
+
+        $VerificationClass::onError($identifier);
     }
 
     // delete from db

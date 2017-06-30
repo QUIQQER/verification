@@ -49,7 +49,8 @@ class Verifier
             self::getFormattedTimestamp() . ' +' . $Verification::getValidDuration() . ' minute'
         );
 
-        $hash = self::generateVerificationHash();
+        $hash         = self::generateVerificationHash();
+        $VerifierSite = self::getVerifierSite();
 
         QUI::getDataBase()->insert(self::getDatabaseTable(), array(
             'identifier'       => $Verification->getIdentifier(),
@@ -59,7 +60,7 @@ class Verifier
             'source'           => get_class($Verification)
         ));
 
-        $url = self::getVerifierSite()->getUrlRewritten(array(), array(
+        $url = $VerifierSite->getUrlRewritten(array(), array(
             'verificationId' => QUI::getPDO()->lastInsertId(),
             'hash'           => $hash
         ));
@@ -117,7 +118,7 @@ class Verifier
      */
     protected static function getVerifierSite()
     {
-        $Project = QUI::getProjectManager()->getStandard();
+        $Project = QUI::getRewrite()->getProject();
         $siteIds = $Project->getSitesIds(array(
             'where' => array(
                 'type' => self::SITE_TYPE
@@ -142,7 +143,7 @@ class Verifier
      */
     protected static function existsVerification(VerificationInterface $Verification)
     {
-        $result = array(
+        $result = QUI::getDataBase()->fetch(array(
             'select' => array(
                 'id'
             ),
@@ -151,7 +152,7 @@ class Verifier
                 'identifier' => $Verification->getIdentifier(),
                 'source'     => get_class($Verification)
             )
-        );
+        ));
 
         return !empty($result);
     }
