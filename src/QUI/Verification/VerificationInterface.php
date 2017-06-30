@@ -28,7 +28,7 @@ interface VerificationInterface
      * Execute this method on successful verification
      *
      * @param string $identifier - Unique Verification identifier
-     * @return mixed
+     * @return void
      */
     public static function onSuccess($identifier);
 
@@ -36,7 +36,7 @@ interface VerificationInterface
      * Execute this method on unsuccessful verification
      *
      * @param string $identifier - Unique Verification identifier
-     * @return mixed
+     * @return void
      */
     public static function onError($identifier);
 
@@ -52,9 +52,10 @@ interface VerificationInterface
      * This message is displayed to the user on unsuccessful verification
      *
      * @param string $identifier - Unique Verification identifier
+     * @param string $reason - The reason for the error (see \QUI\Verification\Verifier::REASON_)
      * @return string
      */
-    public static function getErrorMessage($identifier);
+    public static function getErrorMessage($identifier, $reason);
 
     /**
      * Automatically redirect the user to this URL on successful verification

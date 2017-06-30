@@ -25,6 +25,8 @@
     </groups>
 
     <groups name="quiqqer/verification" datatype="php">
+
+        <!-- Class: Verifier -->
         <locale name="exception.verifier.verification.already.exists">
             <de><![CDATA[Ein Verifikations-Prozess mit dem Identifikator "[identifier]" existiert bereits.]]></de>
             <en><![CDATA[A verification process with identifier "[identifier]" is already in progress.]]></en>
@@ -41,5 +43,21 @@
             <de><![CDATA[Der Hash, der zur Verifizierung übergeben wurde, ist nicht korrekt.]]></de>
             <en><![CDATA[The hash passed for verification is incorrect.]]></en>
         </locale>
+
+        <!-- Site type: verifier -->
+        <locale name="message.types.verifier.success">
+            <de><![CDATA[Der Vorgang wurde erfolgreich verifiziert.]]></de>
+            <en><![CDATA[The operation has been successfully verified.]]></en>
+        </locale>
+        <locale name="message.types.verifier.error.general">
+            <de><![CDATA[Beim Verifizierungsvorgang ist ein unbekannter Fehler aufgetreten. Bitte versuchen Sie es später noch einmal oder starten sie den Vorgang erneut.]]></de>
+            <en><![CDATA[An unknown error occurred during the verification process. Please try again later or restart the process.]]></en>
+        </locale>
+        <locale name="message.types.verifier.error.expired">
+            <de><![CDATA[Der Verifizierungs-Link ist abgelaufen und nicht mehr gültig. Bitte starten sie den Vorgang erneut.]]></de>
+            <en><![CDATA[The verification link has expired and is no longer valid. Please restart the process.]]></en>
+        </locale>
+
+
     </groups>
 </locales>

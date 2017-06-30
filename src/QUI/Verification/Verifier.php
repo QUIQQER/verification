@@ -3,6 +3,7 @@
 namespace QUI\Verification;
 
 use QUI;
+use QUI\Security\Encryption;
 
 /**
  * Class Verifier
@@ -12,7 +13,16 @@ use QUI;
  */
 class Verifier
 {
+    /**
+     * Verifier site type
+     */
     const SITE_TYPE = 'quiqqer/verification:types/verifier';
+
+    /**
+     * Error reasons
+     */
+    const ERROR_REASON_INVALID_REQUEST = 'invalid_request';
+    const ERROR_REASON_EXPIRED         = 'expired';
 
     /**
      * Start a verification process
@@ -40,17 +50,18 @@ class Verifier
         );
 
         $hash = self::generateVerificationHash();
-        $url  = self::getVerifierSite()->getUrlRewritten(array(), array(
-            'identifier' => $Verification->getIdentifier(),
-            'hash'       => $hash
-        ));
 
         QUI::getDataBase()->insert(self::getDatabaseTable(), array(
             'identifier'       => $Verification->getIdentifier(),
-            'verificationHash' => $hash,
+            'verificationHash' => Encryption::encrypt($hash),
             'createDate'       => self::getFormattedTimestamp(),
             'validUntilDate'   => self::getFormattedTimestamp($end),
             'source'           => get_class($Verification)
+        ));
+
+        $url = self::getVerifierSite()->getUrlRewritten(array(), array(
+            'verificationId' => QUI::getPDO()->lastInsertId(),
+            'hash'           => $hash
         ));
 
         return $url;
@@ -59,18 +70,17 @@ class Verifier
     /**
      * Verify a verification based on a request
      *
-     * @param string $identifier - Verification identifier
-     * @param string $hash - Verification hash
+     * @param int $verificationId - Verification ID
      * @return array - Data of correct Verification
      *
      * @throws QUI\Verification\Exception
      */
-    public static function verify($identifier, $hash)
+    public static function getVerificationData($verificationId)
     {
         $result = QUI::getDataBase()->fetch(array(
             'from'  => self::getDatabaseTable(),
             'where' => array(
-                'identifier' => $identifier
+                'id' => $verificationId
             )
         ));
 
@@ -81,23 +91,22 @@ class Verifier
             ));
         }
 
-        $verificationData = false;
+        return current($result);
+    }
 
-        foreach ($result as $row) {
-            if ($row['hash'] === $hash) {
-                $verificationData = $row;
-                break;
-            }
-        }
-
-        if ($verificationData === false) {
-            throw new QUI\Verification\Exception(array(
-                'quiqqer/verification',
-                'exception.verifier.verification.invalid.hash'
-            ));
-        }
-
-        return $verificationData;
+    /**
+     * Finish Verification process (deletes verification data from database)
+     *
+     * @param int $verificationId - Verification ID
+     */
+    public static function finishVerification($verificationId)
+    {
+        QUI::getDataBase()->delete(
+            self::getDatabaseTable(),
+            array(
+                'id' => $verificationId
+            )
+        );
     }
 
     /**
