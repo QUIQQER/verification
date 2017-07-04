@@ -63,5 +63,13 @@ interface VerificationInterface
      * @param string $identifier - Unique Verification identifier
      * @return string|false - If this method returns false, no redirection takes place
      */
-    public static function getRedirectUrl($identifier);
+    public static function getOnSuccessRedirectUrl($identifier);
+
+    /**
+     * Automatically redirect the user to this URL on unsuccessful verification
+     *
+     * @param string $identifier - Unique Verification identifier
+     * @return string|false - If this method returns false, no redirection takes place
+     */
+    public static function getOnErrorRedirectUrl($identifier);
 }

@@ -60,7 +60,7 @@ class Verifier
             'source'           => get_class($Verification)
         ));
 
-        $url = $VerifierSite->getUrlRewritten(array(), array(
+        $url = $VerifierSite->getProject()->getVHost(true). $VerifierSite->getUrlRewritten(array(), array(
             'verificationId' => QUI::getPDO()->lastInsertId(),
             'hash'           => $hash
         ));
