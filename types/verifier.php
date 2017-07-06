@@ -41,20 +41,22 @@ $VerificationClass = $verificationData['source'];
 $identifier        = $verificationData['identifier'];
 $expected          = Encryption::decrypt($verificationData['verificationHash']);
 
-if ($verificationData['verified']) {
-    $errorReason = Verifier::ERROR_REASON_ALREADY_VERIFIED;
-} elseif ($_REQUEST['hash'] === $expected) {
-    // if hash is correct, check validUntilDate
-    $validUntil = strtotime($verificationData['validUntilDate']);
-
-    if (time() <= $validUntil) {
-        $success = true;
+if ($_REQUEST['hash'] === $expected) {
+    if ($verificationData['verified']) {
+        $errorReason = Verifier::ERROR_REASON_ALREADY_VERIFIED;
     } else {
-        $errorReason = Verifier::ERROR_REASON_EXPIRED;
-    }
+        // if hash is correct, check validUntilDate
+        $validUntil = strtotime($verificationData['validUntilDate']);
 
-    // delete verification from db
-    Verifier::finishVerification($verificationId);
+        if (time() <= $validUntil) {
+            $success = true;
+        } else {
+            $errorReason = Verifier::ERROR_REASON_EXPIRED;
+        }
+
+        // delete verification from db
+        Verifier::finishVerification($verificationId);
+    }
 }
 
 // VERIFICATION SUCCESS
