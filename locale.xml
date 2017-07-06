@@ -22,6 +22,28 @@
             <en><![CDATA[Site to which the user is directed to verify a process]]></en>
         </locale>
 
+        <!-- Settings -->
+        <locale name="settings.menu.title">
+            <de><![CDATA[Verifikations-Modul]]></de>
+            <en><![CDATA[Verification module]]></en>
+        </locale>
+        <locale name="settings.category.title">
+            <de><![CDATA[Einstellungen]]></de>
+            <en><![CDATA[Settings]]></en>
+        </locale>
+        <locale name="settings.title">
+            <de><![CDATA[Einstellungen]]></de>
+            <en><![CDATA[Settings]]></en>
+        </locale>
+        <locale name="settings.validDuration.title">
+            <de><![CDATA[Gültigkeitsdauer von Verifizierungs-Links]]></de>
+            <en><![CDATA[Validation period of verification links]]></en>
+        </locale>
+        <locale name="settings.validDuration.description">
+            <de><![CDATA[Legt die <b>Minuten</b> fest, wie lange ein Verifizierungs-Link seine Gültigkeit behält. Wird der Verifizierungs-Link aufgerufen, nachdem die Gültigkeit abgelaufen ist, wird ein Fehler ausgegeben.]]></de>
+            <en><![CDATA[Determines the <b>minutes</b> a verification link remains valid. If the verification link is called after the validity has expired, an error is output.]]></en>
+        </locale>
+
     </groups>
 
     <groups name="quiqqer/verification" datatype="php">

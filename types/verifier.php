@@ -22,6 +22,7 @@ if (empty($_REQUEST['hash'])
 
 $success        = false;
 $verificationId = (int)$_REQUEST['verificationId'];
+$msg            = false;
 
 try {
     $verificationData = Verifier::getVerificationData($verificationId);
@@ -42,45 +43,111 @@ $identifier        = $verificationData['identifier'];
 $expected = Encryption::decrypt($verificationData['verificationHash']);
 
 if ($_REQUEST['hash'] !== $expected) {
-    $msg = $VerificationClass::getErrorMessage($identifier, Verifier::ERROR_REASON_INVALID_REQUEST);
+    try {
+        $msg = $VerificationClass::getErrorMessage($identifier, Verifier::ERROR_REASON_INVALID_REQUEST);
+    } catch (\Exception $Exception) {
+        QUI\System\Log::addError(
+            'Verification getErrorMessage error: "'
+            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+        );
+
+        QUI\System\Log::writeException($Exception);
+    }
 } else {
     // if hash is correct, check validUntilDate
     $validUntil = strtotime($verificationData['validUntilDate']);
 
     if (time() <= $validUntil) {
-        $msg     = $VerificationClass::getSuccessMessage($identifier);
+        try {
+            $msg = $VerificationClass::getSuccessMessage($identifier);
+        } catch (\Exception $Exception) {
+            QUI\System\Log::addError(
+                'Verification getSuccessMessage error: "'
+                . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+            );
+
+            QUI\System\Log::writeException($Exception);
+        }
+
         $success = true;
     } else {
-        $msg = $VerificationClass::getErrorMessage($identifier, Verifier::ERROR_REASON_EXPIRED);
+        try {
+            $msg = $VerificationClass::getErrorMessage($identifier, Verifier::ERROR_REASON_EXPIRED);
+        } catch (\Exception $Exception) {
+            QUI\System\Log::addError(
+                'Verification getErrorMessage error: "'
+                . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+            );
+
+            QUI\System\Log::writeException($Exception);
+        }
     }
 
-    // delete from db
+    // delete verification from db
     Verifier::finishVerification($verificationId);
 }
 
+// VERIFICATION SUCCESS
 if ($success) {
-    $VerificationClass::onSuccess($identifier);
+    try {
+        $VerificationClass::onSuccess($identifier);
+    } catch (\Exception $Exception) {
+        QUI\System\Log::addError(
+            'Verification onSuccess error: "'
+            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+        );
+
+        QUI\System\Log::writeException($Exception);
+    }
 
     if (empty($msg)) {
         $msg = QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.success');
     }
 
-    $redirect = $VerificationClass::getOnSuccessRedirectUrl($identifier);
+    try {
+        $redirect = $VerificationClass::getOnSuccessRedirectUrl($identifier);
 
-    if ($redirect) {
-        redirect($redirect);
+        if ($redirect) {
+            redirect($redirect);
+        }
+    } catch (\Exception $Exception) {
+        QUI\System\Log::addError(
+            'Verification getOnSuccessRedirectUrl error: "'
+            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+        );
+
+        QUI\System\Log::writeException($Exception);
     }
+// VERIFICATION ERROR
 } else {
-    $VerificationClass::onError($identifier);
+    try {
+        $VerificationClass::onError($identifier);
+    } catch (\Exception $Exception) {
+        QUI\System\Log::addError(
+            'Verification onError error: "'
+            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+        );
+
+        QUI\System\Log::writeException($Exception);
+    }
 
     if (empty($msg)) {
         $msg = QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.general');
     }
 
-    $redirect = $VerificationClass::getOnErrorRedirectUrl($identifier);
+    try {
+        $redirect = $VerificationClass::getOnErrorRedirectUrl($identifier);
 
-    if ($redirect) {
-        redirect($redirect);
+        if ($redirect) {
+            redirect($redirect);
+        }
+    } catch (\Exception $Exception) {
+        QUI\System\Log::addError(
+            'Verification getOnErrorRedirectUrl error: "'
+            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+        );
+
+        QUI\System\Log::writeException($Exception);
     }
 }
 

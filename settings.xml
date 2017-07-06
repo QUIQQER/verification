@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiqqer>
+    <settings>
+
+        <config>
+
+            <section name="settings">
+                <conf name="validDuration">
+                    <type><![CDATA[integer]]></type>
+                    <defaultvalue>1440</defaultvalue>
+                </conf>
+            </section>
+
+        </config>
+
+        <window>
+            <title>
+                <locale group="quiqqer/verification" var="settings.menu.title"/>
+            </title>
+
+            <params>
+                <icon>fa fa-check-circle-o</icon>
+            </params>
+
+            <categories>
+                <category name="settings">
+                    <icon>fa fa-cogs</icon>
+                    <title>
+                        <locale group="quiqqer/verification" var="settings.category.title"/>
+                    </title>
+                    <settings title="settings" name="settings">
+                        <title>
+                            <locale group="quiqqer/verification" var="settings.title"/>
+                        </title>
+
+                        <input conf="settings.validDuration" type="number">
+                            <text>
+                                <locale group="quiqqer/verification" var="settings.validDuration.title"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/verification" var="settings.validDuration.description"/>
+                            </description>
+                        </input>
+
+                    </settings>
+                </category>
+
+            </categories>
+        </window>
+
+    </settings>
+</quiqqer>

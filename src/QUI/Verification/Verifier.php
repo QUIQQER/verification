@@ -44,9 +44,17 @@ class Verifier
             ));
         }
 
+        $validDuration = (int)$Verification::getValidDuration();
+
+        // fallback
+        if (empty($validDuration)) {
+            $Conf          = QUI::getPackage('quiqqer/verification')->getConfig();
+            $validDuration = $Conf->get('settings', 'validDuration');
+        }
+
         // calculate duration
         $end = strtotime(
-            self::getFormattedTimestamp() . ' +' . $Verification::getValidDuration() . ' minute'
+            self::getFormattedTimestamp() . ' +' . $validDuration . ' minute'
         );
 
         $hash         = self::generateVerificationHash();
@@ -60,10 +68,10 @@ class Verifier
             'source'           => get_class($Verification)
         ));
 
-        $url = $VerifierSite->getProject()->getVHost(true). $VerifierSite->getUrlRewritten(array(), array(
-            'verificationId' => QUI::getPDO()->lastInsertId(),
-            'hash'           => $hash
-        ));
+        $url = $VerifierSite->getProject()->getVHost(true) . $VerifierSite->getUrlRewritten(array(), array(
+                'verificationId' => QUI::getPDO()->lastInsertId(),
+                'hash'           => $hash
+            ));
 
         return $url;
     }
