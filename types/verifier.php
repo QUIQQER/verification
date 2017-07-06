@@ -23,6 +23,7 @@ if (empty($_REQUEST['hash'])
 $success        = false;
 $verificationId = (int)$_REQUEST['verificationId'];
 $msg            = false;
+$errorReason    = Verifier::ERROR_REASON_INVALID_REQUEST;
 
 try {
     $verificationData = Verifier::getVerificationData($verificationId);
@@ -38,49 +39,18 @@ try {
 /** @var \QUI\Verification\VerificationInterface $VerificationClass */
 $VerificationClass = $verificationData['source'];
 $identifier        = $verificationData['identifier'];
+$expected          = Encryption::decrypt($verificationData['verificationHash']);
 
-// verify data against hash
-$expected = Encryption::decrypt($verificationData['verificationHash']);
-
-if ($_REQUEST['hash'] !== $expected) {
-    try {
-        $msg = $VerificationClass::getErrorMessage($identifier, Verifier::ERROR_REASON_INVALID_REQUEST);
-    } catch (\Exception $Exception) {
-        QUI\System\Log::addError(
-            'Verification getErrorMessage error: "'
-            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
-        );
-
-        QUI\System\Log::writeException($Exception);
-    }
-} else {
+if ($verificationData['verified']) {
+    $errorReason = Verifier::ERROR_REASON_ALREADY_VERIFIED;
+} elseif ($_REQUEST['hash'] === $expected) {
     // if hash is correct, check validUntilDate
     $validUntil = strtotime($verificationData['validUntilDate']);
 
     if (time() <= $validUntil) {
-        try {
-            $msg = $VerificationClass::getSuccessMessage($identifier);
-        } catch (\Exception $Exception) {
-            QUI\System\Log::addError(
-                'Verification getSuccessMessage error: "'
-                . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
-            );
-
-            QUI\System\Log::writeException($Exception);
-        }
-
         $success = true;
     } else {
-        try {
-            $msg = $VerificationClass::getErrorMessage($identifier, Verifier::ERROR_REASON_EXPIRED);
-        } catch (\Exception $Exception) {
-            QUI\System\Log::addError(
-                'Verification getErrorMessage error: "'
-                . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
-            );
-
-            QUI\System\Log::writeException($Exception);
-        }
+        $errorReason = Verifier::ERROR_REASON_EXPIRED;
     }
 
     // delete verification from db
@@ -89,6 +59,7 @@ if ($_REQUEST['hash'] !== $expected) {
 
 // VERIFICATION SUCCESS
 if ($success) {
+    // execute onSuccess
     try {
         $VerificationClass::onSuccess($identifier);
     } catch (\Exception $Exception) {
@@ -100,10 +71,7 @@ if ($success) {
         QUI\System\Log::writeException($Exception);
     }
 
-    if (empty($msg)) {
-        $msg = QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.success');
-    }
-
+    // onSuccess redirect
     try {
         $redirect = $VerificationClass::getOnSuccessRedirectUrl($identifier);
 
@@ -118,8 +86,24 @@ if ($success) {
 
         QUI\System\Log::writeException($Exception);
     }
+
+    try {
+        $msg = $VerificationClass::getSuccessMessage($identifier);
+    } catch (\Exception $Exception) {
+        QUI\System\Log::addError(
+            'Verification getSuccessMessage error: "'
+            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+        );
+
+        QUI\System\Log::writeException($Exception);
+    }
+
+    if (empty($msg)) {
+        $msg = QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.success');
+    }
 // VERIFICATION ERROR
 } else {
+    // execute onError
     try {
         $VerificationClass::onError($identifier);
     } catch (\Exception $Exception) {
@@ -131,10 +115,7 @@ if ($success) {
         QUI\System\Log::writeException($Exception);
     }
 
-    if (empty($msg)) {
-        $msg = QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.general');
-    }
-
+    // onError redirect
     try {
         $redirect = $VerificationClass::getOnErrorRedirectUrl($identifier);
 
@@ -148,6 +129,22 @@ if ($success) {
         );
 
         QUI\System\Log::writeException($Exception);
+    }
+
+    // get error message
+    try {
+        $msg = $VerificationClass::getErrorMessage($identifier, $errorReason);
+    } catch (\Exception $Exception) {
+        QUI\System\Log::addError(
+            'Verification getErrorMessage error: "'
+            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+        );
+
+        QUI\System\Log::writeException($Exception);
+    }
+
+    if (empty($msg)) {
+        $msg = QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.' . $errorReason);
     }
 }
 

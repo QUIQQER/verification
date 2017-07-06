@@ -9,6 +9,10 @@
                     <type><![CDATA[integer]]></type>
                     <defaultvalue>1440</defaultvalue>
                 </conf>
+                <conf name="keepVerifiedDuration">
+                    <type><![CDATA[integer]]></type>
+                    <defaultvalue>72</defaultvalue>
+                </conf>
             </section>
 
         </config>
@@ -39,6 +43,15 @@
                             </text>
                             <description>
                                 <locale group="quiqqer/verification" var="settings.validDuration.description"/>
+                            </description>
+                        </input>
+
+                        <input conf="settings.keepVerifiedDuration" type="number">
+                            <text>
+                                <locale group="quiqqer/verification" var="settings.keepVerifiedDuration.title"/>
+                            </text>
+                            <description>
+                                <locale group="quiqqer/verification" var="settings.keepVerifiedDuration.description"/>
                             </description>
                         </input>
 

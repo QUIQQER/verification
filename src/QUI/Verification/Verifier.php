@@ -21,8 +21,9 @@ class Verifier
     /**
      * Error reasons
      */
-    const ERROR_REASON_INVALID_REQUEST = 'invalid_request';
-    const ERROR_REASON_EXPIRED         = 'expired';
+    const ERROR_REASON_INVALID_REQUEST  = 'invalid_request';
+    const ERROR_REASON_EXPIRED          = 'expired';
+    const ERROR_REASON_ALREADY_VERIFIED = 'already_verified';
 
     /**
      * Start a verification process
@@ -110,8 +111,12 @@ class Verifier
      */
     public static function finishVerification($verificationId)
     {
-        QUI::getDataBase()->delete(
+        QUI::getDataBase()->update(
             self::getDatabaseTable(),
+            array(
+                'verified'     => 1,
+                'verifiedDate' => self::getFormattedTimestamp()
+            ),
             array(
                 'id' => $verificationId
             )
@@ -195,7 +200,7 @@ class Verifier
      *
      * @return string
      */
-    protected static function getDatabaseTable()
+    public static function getDatabaseTable()
     {
         return QUI::getDBTableName('quiqqer_verification');
     }

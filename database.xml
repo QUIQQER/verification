@@ -9,6 +9,8 @@
             <field type="TIMESTAMP NULL">createDate</field>
             <field type="TIMESTAMP NULL">validUntilDate</field>
             <field type="VARCHAR(255) NOT NULL">source</field>
+            <field type="TIMESTAMP NULL">verifiedDate</field>
+            <field type="TINYINT(1) NOT NULL DEFAULT 0">verified</field>
         </table>
     </global>
 

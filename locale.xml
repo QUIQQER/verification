@@ -39,9 +39,27 @@
             <de><![CDATA[Gültigkeitsdauer von Verifizierungs-Links]]></de>
             <en><![CDATA[Validation period of verification links]]></en>
         </locale>
-        <locale name="settings.validDuration.description">
+        <locale name="settings.validDuration.description" html="true">
             <de><![CDATA[Legt die <b>Minuten</b> fest, wie lange ein Verifizierungs-Link seine Gültigkeit behält. Wird der Verifizierungs-Link aufgerufen, nachdem die Gültigkeit abgelaufen ist, wird ein Fehler ausgegeben.]]></de>
             <en><![CDATA[Determines the <b>minutes</b> a verification link remains valid. If the verification link is called after the validity has expired, an error is output.]]></en>
+        </locale>
+        <locale name="settings.keepVerifiedDuration.title">
+            <de><![CDATA[Verifizierte Daten löschen nach x Tagen]]></de>
+            <en><![CDATA[Delete verified data after x days]]></en>
+        </locale>
+        <locale name="settings.keepVerifiedDuration.description" html="true">
+            <de><![CDATA[Bestimmt, nach wievielen <b>Tagen</b> Verifizierungs-Vorgänge, die bereits validiert wurden, aus der Datenbank gelöscht werden. Dies setzt voraus, dass der Cron <b>Verifikations-Modul: Verifizierte Daten löschen</b> eingerichtet ist.]]></de>
+            <en><![CDATA[Determines after how many <b>days</b> verification processes are deleted from database after they have been verified. Required that cron <b>Verification module: Delete verified data</b> is set up.]]></en>
+        </locale>
+
+        <!-- Cron -->
+        <locale name="cron.title">
+            <de><![CDATA[Verifikations-Modul: Verifizierte Daten löschen]]></de>
+            <en><![CDATA[Verification module: Delete verified data]]></en>
+        </locale>
+        <locale name="cron.description">
+            <de><![CDATA[Löscht alle bereits verifizierten Daten, die älter als X Tage sind (s. Einstellungen)]]></de>
+            <en><![CDATA[Deletes all verified data that is older than X days (see settings)]]></en>
         </locale>
 
     </groups>
@@ -75,9 +93,17 @@
             <de><![CDATA[Beim Verifizierungsvorgang ist ein unbekannter Fehler aufgetreten. Bitte versuchen Sie es später noch einmal oder starten sie den Vorgang erneut.]]></de>
             <en><![CDATA[An unknown error occurred during the verification process. Please try again later or restart the process.]]></en>
         </locale>
+        <locale name="message.types.verifier.error.invalid_request">
+            <de><![CDATA[Beim Verifizierungsvorgang konnte nicht bestätigt werden. Bitte versuchen Sie es später noch einmal oder starten sie den Vorgang erneut.]]></de>
+            <en><![CDATA[An verification process could not be verified. Please try again later or restart the process.]]></en>
+        </locale>
         <locale name="message.types.verifier.error.expired">
             <de><![CDATA[Der Verifizierungs-Link ist abgelaufen und nicht mehr gültig. Bitte starten sie den Vorgang erneut.]]></de>
             <en><![CDATA[The verification link has expired and is no longer valid. Please restart the process.]]></en>
+        </locale>
+        <locale name="message.types.verifier.error.already_verified">
+            <de><![CDATA[Der Verifizierungs-Link wurde bereits aufgerufen und ist daher nicht mehr gültig.]]></de>
+            <en><![CDATA[The verification link has already been called and is therefore no longer valid.]]></en>
         </locale>
 
 
