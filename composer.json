@@ -1,28 +1,30 @@
 {
-    "name" : "quiqqer/verification",
-    "type" : "quiqqer-module",
-    "description" : "Verify any action via a special url with a unique hash (i.e. user registration, newsletter opt-in etc.)",
-    "version" : "dev-dev",
-    "license" : "GPL-3.0+",
-    "authors" : [
-        {
-            "name": "Patrick Müller",
-            "email": "p.mueller@pcsg.de",
-            "homepage": "http://www.pcsg.de",
-            "role": "Developer"
-        }
-    ],
-    "support" : {
-        "email": "support@pcsg.de",
-        "url": "http://www.pcsg.de"
-    },
-    "require": {
-        
+  "name": "quiqqer/verification",
+  "type": "quiqqer-module",
+  "description": "Verify any action via a special url with a unique hash (i.e. user registration, newsletter opt-in etc.)",
+  "version": "dev-dev",
+  "license": "GPL-3.0+",
+  "homepage": "https://www.quiqqer.com",
+  "authors": [
+    {
+      "name": "Patrick Müller",
+      "email": "p.mueller@pcsg.de",
+      "homepage": "http://www.pcsg.de",
+      "role": "Developer"
     }
-    ,"autoload": {
-  "psr-4": {
+  ],
+  "support": {
+    "email": "support@pcsg.de",
+    "url": "http://www.pcsg.de",
+    "issues": "https://dev.quiqqer.com/quiqqer/verification/issues",
+    "source": "https://dev.quiqqer.com/quiqqer/verification"
+  },
+  "require": {
+    "quiqqer/quiqqer": "dev-dev"
+  },
+  "autoload": {
+    "psr-4": {
       "QUI\\Verification\\": "src/QUI/Verification"
-   }
-}
-
+    }
+  }
 }
