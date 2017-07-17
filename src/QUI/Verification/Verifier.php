@@ -51,7 +51,7 @@ class Verifier
             self::removeVerification($Verification);
         }
 
-        $validDuration = (int)$Verification::getValidDuration();
+        $validDuration = (int)$Verification::getValidDuration($Verification->getIdentifier());
 
         // fallback
         if (empty($validDuration)) {
