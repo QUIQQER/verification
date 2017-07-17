@@ -19,10 +19,11 @@ interface VerificationInterface
     /**
      * Get the duration of a Verification (minutes)
      *
+     * @param string $identifier - Unique Verification identifier
      * @return int|false - duration in minutes;
      * if this method returns false use the module setting default value
      */
-    public static function getValidDuration();
+    public static function getValidDuration($identifier);
 
     /**
      * Execute this method on successful verification
