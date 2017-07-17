@@ -29,20 +29,26 @@ class Verifier
      * Start a verification process
      *
      * @param VerificationInterface $Verification
+     * @param bool $overwriteExisting (optional) - Overwrite Verification with identical
+     * identifier and source class [default: false]
      * @return string - Verification URL
      *
      * @throws QUI\Verification\Exception
      */
-    public static function startVerification(VerificationInterface $Verification)
+    public static function startVerification(VerificationInterface $Verification, $overwriteExisting = false)
     {
         if (self::existsVerification($Verification)) {
-            throw new QUI\Verification\Exception(array(
-                'quiqqer/verification',
-                'exception.verifier.verification.already.exists',
-                array(
-                    'identifier' => $Verification->getIdentifier()
-                )
-            ));
+            if ($overwriteExisting !== true) {
+                throw new QUI\Verification\Exception(array(
+                    'quiqqer/verification',
+                    'exception.verifier.verification.already.exists',
+                    array(
+                        'identifier' => $Verification->getIdentifier()
+                    )
+                ));
+            }
+
+            self::removeVerification($Verification);
         }
 
         $validDuration = (int)$Verification::getValidDuration();
@@ -105,7 +111,24 @@ class Verifier
     }
 
     /**
-     * Finish Verification process (deletes verification data from database)
+     * Delete Verification from database
+     *
+     * @param VerificationInterface $Verification
+     * @return void
+     */
+    public static function removeVerification(VerificationInterface $Verification)
+    {
+        QUI::getDataBase()->delete(
+            self::getDatabaseTable(),
+            array(
+                'identifier' => $Verification->getIdentifier(),
+                'source'     => get_class($Verification)
+            )
+        );
+    }
+
+    /**
+     * Finish Verification process
      *
      * @param int $verificationId - Verification ID
      */
