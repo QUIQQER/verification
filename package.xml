@@ -8,4 +8,18 @@
            <locale group='quiqqer/verification' var='package.description'/>
         </description>
     </package>
+
+
+    <support>
+        <email>support@pcsg.de</email>
+        <forum>https://community.quiqqer.com</forum>
+        <source>https://dev.quiqqer.com/quiqqer/verification</source>
+        <issues>https://dev.quiqqer.com/quiqqer/verification/issues</issues>
+        <wiki>https://dev.quiqqer.com/quiqqer/verification/wikis/home</wiki>
+    </support>
+
+    <copyright>
+        <name><![CDATA[PCSG - Computer & Internet Service OHG]]></name>
+        <license></license>
+    </copyright>
 </quiqqer>
