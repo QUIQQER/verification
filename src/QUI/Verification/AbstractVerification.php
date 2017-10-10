@@ -7,24 +7,33 @@ abstract class AbstractVerification implements VerificationInterface
     /**
      * Unique Verification identifier
      *
-     * @var string|integer
+     * @var string|int
      */
     protected $identifier;
 
     /**
-     * AbstractVerification constructor.
+     * Additional data
      *
-     * @param string|integer $identifier - Unique Verification identifier
+     * @var array
      */
-    public function __construct($identifier)
+    protected $additionalData = array();
+
+    /**
+     * VerificationInterface constructor.
+     *
+     * @param string|int $identifier - Unique identifier
+     * @param array $additionalData (optional) - Additional data
+     */
+    public function __construct($identifier, $additionalData = array())
     {
-        $this->identifier = $identifier;
+        $this->identifier     = $identifier;
+        $this->additionalData = $additionalData;
     }
 
     /**
      * Get a unique identifier that identifies this Verification
      *
-     * @return string
+     * @return string|int
      */
     public function getIdentifier()
     {
@@ -32,13 +41,22 @@ abstract class AbstractVerification implements VerificationInterface
     }
 
     /**
+     * Get additional data
+     *
+     * @return array
+     */
+    public function getAdditionalData()
+    {
+        return $this->additionalData;
+    }
+
+    /**
      * Get the duration of a Verification (minutes)
      *
-     * @param string $identifier - Unique Verification identifier
      * @return int|false - duration in minutes;
      * if this method returns false use the module setting default value
      */
-    public static function getValidDuration($identifier)
+    public function getValidDuration()
     {
         return false;
     }
@@ -46,55 +64,38 @@ abstract class AbstractVerification implements VerificationInterface
     /**
      * Execute this method on successful verification
      *
-     * @param string $identifier - Unique Verification identifier
      * @return void
      */
-    public static function onSuccess($identifier)
-    {
-
-    }
+    abstract public function onSuccess();
 
     /**
      * Execute this method on unsuccessful verification
      *
-     * @param string $identifier - Unique Verification identifier
      * @return void
      */
-    public static function onError($identifier)
-    {
-
-    }
+    abstract public function onError();
 
     /**
      * This message is displayed to the user on successful verification
      *
-     * @param string $identifier - Unique Verification identifier
      * @return string
      */
-    public static function getSuccessMessage($identifier)
-    {
-        return '';
-    }
+    abstract public function getSuccessMessage();
 
     /**
      * This message is displayed to the user on unsuccessful verification
      *
-     * @param string $identifier - Unique Verification identifier
      * @param string $reason - The reason for the error (see \QUI\Verification\Verifier::REASON_)
      * @return string
      */
-    public static function getErrorMessage($identifier, $reason)
-    {
-        return '';
-    }
+    abstract public function getErrorMessage($reason);
 
     /**
      * Automatically redirect the user to this URL on successful verification
      *
-     * @param string $identifier - Unique Verification identifier
      * @return string|false - If this method returns false, no redirection takes place
      */
-    public static function getOnSuccessRedirectUrl($identifier)
+    public function getOnSuccessRedirectUrl()
     {
         return false;
     }
@@ -102,10 +103,9 @@ abstract class AbstractVerification implements VerificationInterface
     /**
      * Automatically redirect the user to this URL on unsuccessful verification
      *
-     * @param string $identifier - Unique Verification identifier
      * @return string|false - If this method returns false, no redirection takes place
      */
-    public static function getOnErrorRedirectUrl($identifier)
+    public function getOnErrorRedirectUrl()
     {
         return false;
     }

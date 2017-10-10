@@ -9,6 +9,15 @@ namespace QUI\Verification;
  */
 interface VerificationInterface
 {
+
+    /**
+     * VerificationInterface constructor.
+     *
+     * @param string|int $identifier - Unique identifier
+     * @param array $additionalData (optional) - Additional data
+     */
+    public function __construct($identifier, $additionalData = array());
+
     /**
      * Get a unique identifier that identifies this Verification
      *
@@ -17,60 +26,60 @@ interface VerificationInterface
     public function getIdentifier();
 
     /**
+     * Get additional data
+     *
+     * @return array
+     */
+    public function getAdditionalData();
+
+    /**
      * Get the duration of a Verification (minutes)
      *
-     * @param string $identifier - Unique Verification identifier
      * @return int|false - duration in minutes;
      * if this method returns false use the module setting default value
      */
-    public static function getValidDuration($identifier);
+    public function getValidDuration();
 
     /**
      * Execute this method on successful verification
      *
-     * @param string $identifier - Unique Verification identifier
      * @return void
      */
-    public static function onSuccess($identifier);
+    public function onSuccess();
 
     /**
      * Execute this method on unsuccessful verification
      *
-     * @param string $identifier - Unique Verification identifier
      * @return void
      */
-    public static function onError($identifier);
+    public function onError();
 
     /**
      * This message is displayed to the user on successful verification
      *
-     * @param string $identifier - Unique Verification identifier
      * @return string
      */
-    public static function getSuccessMessage($identifier);
+    public function getSuccessMessage();
 
     /**
      * This message is displayed to the user on unsuccessful verification
      *
-     * @param string $identifier - Unique Verification identifier
-     * @param string $reason - The reason for the error (see \QUI\Verification\Verifier::REASON_)
+     * @param string $reason - The reason for the error (see \QUI\Verification\Verifier::REASON_*)
      * @return string
      */
-    public static function getErrorMessage($identifier, $reason);
+    public function getErrorMessage($reason);
 
     /**
      * Automatically redirect the user to this URL on successful verification
      *
-     * @param string $identifier - Unique Verification identifier
      * @return string|false - If this method returns false, no redirection takes place
      */
-    public static function getOnSuccessRedirectUrl($identifier);
+    public function getOnSuccessRedirectUrl();
 
     /**
      * Automatically redirect the user to this URL on unsuccessful verification
      *
-     * @param string $identifier - Unique Verification identifier
      * @return string|false - If this method returns false, no redirection takes place
      */
-    public static function getOnErrorRedirectUrl($identifier);
+    public function getOnErrorRedirectUrl();
 }

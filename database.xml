@@ -5,6 +5,7 @@
         <table name="quiqqer_verification" no-site-reference="1" no-auto-update="1">
             <field type="BIGINT(20) NOT NULL PRIMARY KEY AUTO_INCREMENT">id</field>
             <field type="VARCHAR(255) NOT NULL">identifier</field>
+            <field type="MEDIUMTEXT NULL">additionalData</field>
             <field type="VARCHAR(255) NOT NULL">verificationHash</field>
             <field type="TIMESTAMP NULL">createDate</field>
             <field type="TIMESTAMP NULL">validUntilDate</field>

@@ -69,6 +69,7 @@ class Verifier
 
         QUI::getDataBase()->insert(self::getDatabaseTable(), array(
             'identifier'       => $Verification->getIdentifier(),
+            'additionalData'   => json_encode($Verification->getAdditionalData()),
             'verificationHash' => Encryption::encrypt($hash),
             'createDate'       => self::getFormattedTimestamp(),
             'validUntilDate'   => self::getFormattedTimestamp($end),
@@ -107,7 +108,10 @@ class Verifier
             ));
         }
 
-        return current($result);
+        $data                   = current($result);
+        $data['additionalData'] = json_decode($data['additionalData'], true);
+
+        return $data;
     }
 
     /**

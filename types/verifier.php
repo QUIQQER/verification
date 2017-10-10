@@ -39,7 +39,10 @@ try {
 /** @var \QUI\Verification\VerificationInterface $VerificationClass */
 $VerificationClass = $verificationData['source'];
 $identifier        = $verificationData['identifier'];
-$expected          = Encryption::decrypt($verificationData['verificationHash']);
+
+/** @var \QUI\Verification\VerificationInterface $Verification */
+$Verification = new $VerificationClass($identifier, $verificationData['additionalData']);
+$expected     = Encryption::decrypt($verificationData['verificationHash']);
 
 if ($_REQUEST['hash'] === $expected) {
     if ($verificationData['verified']) {
@@ -63,7 +66,7 @@ if ($_REQUEST['hash'] === $expected) {
 if ($success) {
     // execute onSuccess
     try {
-        $VerificationClass::onSuccess($identifier);
+        $Verification->onSuccess();
     } catch (\Exception $Exception) {
         QUI\System\Log::addError(
             'Verification onSuccess error: "'
@@ -75,7 +78,7 @@ if ($success) {
 
     // onSuccess redirect
     try {
-        $redirect = $VerificationClass::getOnSuccessRedirectUrl($identifier);
+        $redirect = $Verification->getOnSuccessRedirectUrl();
 
         if ($redirect) {
             redirect($redirect);
@@ -90,7 +93,7 @@ if ($success) {
     }
 
     try {
-        $msg = $VerificationClass::getSuccessMessage($identifier);
+        $msg = $Verification->getSuccessMessage();
     } catch (\Exception $Exception) {
         QUI\System\Log::addError(
             'Verification getSuccessMessage error: "'
@@ -107,7 +110,7 @@ if ($success) {
 } else {
     // execute onError
     try {
-        $VerificationClass::onError($identifier);
+        $Verification->onError();
     } catch (\Exception $Exception) {
         QUI\System\Log::addError(
             'Verification onError error: "'
@@ -119,7 +122,7 @@ if ($success) {
 
     // onError redirect
     try {
-        $redirect = $VerificationClass::getOnErrorRedirectUrl($identifier);
+        $redirect = $Verification->getOnErrorRedirectUrl();
 
         if ($redirect) {
             redirect($redirect);
@@ -135,7 +138,7 @@ if ($success) {
 
     // get error message
     try {
-        $msg = $VerificationClass::getErrorMessage($identifier, $errorReason);
+        $msg = $Verification->getErrorMessage($errorReason);
     } catch (\Exception $Exception) {
         QUI\System\Log::addError(
             'Verification getErrorMessage error: "'
