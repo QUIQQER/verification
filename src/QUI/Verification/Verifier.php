@@ -73,19 +73,32 @@ class Verifier
             'verificationHash' => Encryption::encrypt($hash),
             'createDate'       => self::getFormattedTimestamp(),
             'validUntilDate'   => self::getFormattedTimestamp($end),
-            'source'           => get_class($Verification)
+            'source'           => get_class($Verification),
         ));
 
+        $verificationId = QUI::getPDO()->lastInsertId();
+
         $url = $VerifierSite->getProject()->getVHost(true) . $VerifierSite->getUrlRewritten(array(), array(
-                'verificationId' => QUI::getPDO()->lastInsertId(),
+                'verificationId' => $verificationId,
                 'hash'           => $hash
             ));
+
+        // save url in tbl
+        QUI::getDataBase()->update(
+            self::getDatabaseTable(),
+            array(
+                'verificationUrl' => Encryption::encrypt($url)
+            ),
+            array(
+                'id' => $verificationId
+            )
+        );
 
         return $url;
     }
 
     /**
-     * Verify a verification based on a request
+     * Get Verification data
      *
      * @param int $verificationId - Verification ID
      * @return array - Data of correct Verification
@@ -112,6 +125,46 @@ class Verifier
         $data['additionalData'] = json_decode($data['additionalData'], true);
 
         return $data;
+    }
+
+    /**
+     * Get Verification data
+     *
+     * @param string $identifier - Verification identifier
+     * @return VerificationInterface
+     *
+     * @throws QUI\Verification\Exception
+     */
+    public static function getVerificationByIdentifier($identifier)
+    {
+        $result = QUI::getDataBase()->fetch(array(
+            'select' => array(
+                'identifier',
+                'source',
+                'additionalData'
+            ),
+            'from'   => self::getDatabaseTable(),
+            'where'  => array(
+                'identifier' => $identifier
+            )
+        ));
+
+        if (empty($result)) {
+            throw new QUI\Verification\Exception(array(
+                'quiqqer/verification',
+                'exception.verifier.verification.does.not.exists'
+            ));
+        }
+
+        $data = current($result);
+
+        /** @var VerificationInterface|AbstractVerification $class */
+        $class = $data['source'];
+
+        return new $class(
+            $data['identifier'],
+            json_decode($data['additionalData'], true)
+        );
     }
 
     /**
