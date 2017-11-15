@@ -139,12 +139,21 @@ class Verifier
      *
      * @param string $identifier - Verification identifier
      * @param string $type - Verification type ($VerificationClass::getType())
+     * @param bool $unverifiedOnly (optional) - Only get unverified verifications
      * @return VerificationInterface
      *
      * @throws QUI\Verification\Exception
      */
-    public static function getVerificationByIdentifier($identifier, $type)
+    public static function getVerificationByIdentifier($identifier, $type, $unverifiedOnly = false)
     {
+        $where = array(
+            'identifier' => self::getUniqueIdentifier($identifier, $type)
+        );
+
+        if ($unverifiedOnly === true) {
+            $where['verified'] = 0;
+        }
+
         $result = QUI::getDataBase()->fetch(array(
             'select' => array(
                 'identifier',
@@ -152,9 +161,7 @@ class Verifier
                 'additionalData'
             ),
             'from'   => self::getDatabaseTable(),
-            'where'  => array(
-                'identifier' => $identifier
-            )
+            'where'  => $where
         ));
 
         if (empty($result)) {
@@ -170,7 +177,7 @@ class Verifier
         $class = $data['source'];
 
         return new $class(
-            self::getIdentifierFromUniqueIdentifier($data['identifier']),
+            $identifier,
             json_decode($data['additionalData'], true)
         );
     }
@@ -253,8 +260,10 @@ class Verifier
             ),
             'from'   => self::getDatabaseTable(),
             'where'  => array(
-                'identifier' => $Verification->getIdentifier(),
-                'source'     => $Verification::getType()
+                'identifier' => self::getUniqueIdentifier(
+                    $Verification->getIdentifier(),
+                    $Verification::getType()
+                )
             )
         ));
 
