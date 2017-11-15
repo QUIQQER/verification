@@ -82,4 +82,11 @@ interface VerificationInterface
      * @return string|false - If this method returns false, no redirection takes place
      */
     public function getOnErrorRedirectUrl();
+
+    /**
+     * Get type (class name)
+     *
+     * @return string
+     */
+    public static function getType();
 }

@@ -67,13 +67,18 @@ class Verifier
         $hash         = self::generateVerificationHash();
         $VerifierSite = self::getVerifierSite();
 
+        $uniqueIdentifier = self::getUniqueIdentifier(
+            $Verification->getIdentifier(),
+            $Verification::getType()
+        );
+
         QUI::getDataBase()->insert(self::getDatabaseTable(), array(
-            'identifier'       => $Verification->getIdentifier(),
+            'identifier'       => $uniqueIdentifier,
             'additionalData'   => json_encode($Verification->getAdditionalData()),
             'verificationHash' => Encryption::encrypt($hash),
             'createDate'       => self::getFormattedTimestamp(),
             'validUntilDate'   => self::getFormattedTimestamp($end),
-            'source'           => get_class($Verification),
+            'source'           => $Verification::getType(),
         ));
 
         $verificationId = QUI::getPDO()->lastInsertId();
@@ -121,7 +126,9 @@ class Verifier
             ));
         }
 
-        $data                   = current($result);
+        $data = current($result);
+
+        $data['identifier']     = self::getIdentifierFromUniqueIdentifier($data['identifier']);
         $data['additionalData'] = json_decode($data['additionalData'], true);
 
         return $data;
@@ -131,11 +138,12 @@ class Verifier
      * Get Verification data
      *
      * @param string $identifier - Verification identifier
+     * @param string $type - Verification type ($VerificationClass::getType())
      * @return VerificationInterface
      *
      * @throws QUI\Verification\Exception
      */
-    public static function getVerificationByIdentifier($identifier)
+    public static function getVerificationByIdentifier($identifier, $type)
     {
         $result = QUI::getDataBase()->fetch(array(
             'select' => array(
@@ -162,7 +170,7 @@ class Verifier
         $class = $data['source'];
 
         return new $class(
-            $data['identifier'],
+            self::getIdentifierFromUniqueIdentifier($data['identifier']),
             json_decode($data['additionalData'], true)
         );
     }
@@ -178,8 +186,11 @@ class Verifier
         QUI::getDataBase()->delete(
             self::getDatabaseTable(),
             array(
-                'identifier' => $Verification->getIdentifier(),
-                'source'     => get_class($Verification)
+                'identifier' => self::getUniqueIdentifier(
+                    $Verification->getIdentifier(),
+                    $Verification::getType()
+                ),
+                'source'     => $Verification::getType()
             )
         );
     }
@@ -243,7 +254,7 @@ class Verifier
             'from'   => self::getDatabaseTable(),
             'where'  => array(
                 'identifier' => $Verification->getIdentifier(),
-                'source'     => get_class($Verification)
+                'source'     => $Verification::getType()
             )
         ));
 
@@ -283,5 +294,28 @@ class Verifier
     public static function getDatabaseTable()
     {
         return QUI::getDBTableName('quiqqer_verification');
+    }
+
+    /**
+     * Get unique identifier based on a Verification identifier and Verification type
+     *
+     * @param string $identifier - Verification identifier
+     * @param string $verificationType - Verification type
+     * @return string
+     */
+    protected static function getUniqueIdentifier($identifier, $verificationType)
+    {
+        return $identifier . '-' . mb_substr(hash('sha256', $verificationType), 0, 8);
+    }
+
+    /**
+     * Get the identifier string that was given by the Verification
+     *
+     * @param string $uniqueIdentifier
+     * @return string
+     */
+    protected static function getIdentifierFromUniqueIdentifier($uniqueIdentifier)
+    {
+        return mb_substr($uniqueIdentifier, 0, -9);
     }
 }

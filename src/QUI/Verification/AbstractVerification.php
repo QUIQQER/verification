@@ -109,4 +109,14 @@ abstract class AbstractVerification implements VerificationInterface
     {
         return false;
     }
+
+    /**
+     * Get type (class name)
+     *
+     * @return string
+     */
+    public static function getType()
+    {
+        return get_called_class();
+    }
 }
