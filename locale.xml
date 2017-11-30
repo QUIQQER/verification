@@ -8,8 +8,8 @@
             <en><![CDATA[QUIQQER - Verification]]></en>
         </locale>
         <locale name="package.description">
-            <de><![CDATA[Verifiziere jede Handlung mit einer speziellen URL mit einizigartigem Hashwert (Nutzerregistrierung, Newsletter opt-in etc.)]]></de>
-            <en><![CDATA[Verify any action via a special url with a unique hash (i.e. user registration, newsletter opt-in etc.)]]></en>
+            <de><![CDATA[Verifiziere beliebige Benutzer-Handlungen mit einer speziellen URL mit einizigartigem Hashwert (Nutzerregistrierung, Newsletter opt-in etc.)]]></de>
+            <en><![CDATA[Verify any user action via a special url with a unique hash (i.e. user registration, newsletter opt-in etc.)]]></en>
         </locale>
 
         <!-- Site types -->
