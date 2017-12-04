@@ -83,7 +83,7 @@ class Verifier
 
         $verificationId = QUI::getPDO()->lastInsertId();
 
-        $url = $VerifierSite->getUrlRewritten(array(), array(
+        $url = $VerifierSite->getUrlRewrittenWithHost(array(), array(
                 'verificationId' => $verificationId,
                 'hash'           => $hash
             ));
