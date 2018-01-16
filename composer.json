@@ -20,7 +20,7 @@
     "source": "https://dev.quiqqer.com/quiqqer/verification"
   },
   "require": {
-    "quiqqer/quiqqer": "dev-dev"
+    "quiqqer/quiqqer": ">=1.1|dev-master"
   },
   "autoload": {
     "psr-4": {
