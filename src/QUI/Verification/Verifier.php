@@ -122,7 +122,10 @@ class Verifier
         if (empty($result)) {
             throw new QUI\Verification\Exception(array(
                 'quiqqer/verification',
-                'exception.verifier.verification.does.not.exists'
+                'exception.verifier.verification.id_does_not_exist',
+                array(
+                    'verificationId' => $verificationId
+                )
             ));
         }
 
@@ -167,7 +170,10 @@ class Verifier
         if (empty($result)) {
             throw new QUI\Verification\Exception(array(
                 'quiqqer/verification',
-                'exception.verifier.verification.does.not.exists'
+                'exception.verifier.verification.does.not.exists',
+                array(
+                    'identifier' => $identifier
+                )
             ));
         }
 

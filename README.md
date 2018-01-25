@@ -1,4 +1,6 @@
-verification
+![QUIQQER Verification](bin/images/Readme.jpg)
+
+QUIQQER Verification
 ========
 
 Verify any action via a special url with a unique hash (i.e. user registration, newsletter opt-in etc.)
