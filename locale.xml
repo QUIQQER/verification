@@ -30,7 +30,6 @@
         <locale name="settings.category.title">
             <de><![CDATA[Einstellungen]]></de>
             <en><![CDATA[Settings]]></en>
-        </locale>
         <locale name="settings.title">
             <de><![CDATA[Einstellungen]]></de>
             <en><![CDATA[Settings]]></en>
@@ -74,6 +73,10 @@
         <locale name="exception.verifier.verification.does.not.exists">
             <de><![CDATA[Es existiert kein Verifikations-Prozess mit dem Identifikator "[identifier]".]]></de>
             <en><![CDATA[A verification process with identifier "[identifier]" does not exist.]]></en>
+        </locale>
+        <locale name="exception.verifier.verification.id_does_not_exist">
+            <de><![CDATA[Es existiert kein Verifikations-Prozess mit der ID #[verificationId].]]></de>
+            <en><![CDATA[A verification process with ID #[verificationId] does not exist.]]></en>
         </locale>
         <locale name="exception.verifier.site.does.not.exist">
             <de><![CDATA[Es wurde noch keine Verifikator-Seite angelegt.]]></de>
