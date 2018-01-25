@@ -1,14 +1,15 @@
 <quiqqer>
     <package>
         <title>
-            <locale group='quiqqer/verification' var='package.title'/>
+            <locale group="quiqqer/verification" var="package.title"/>
         </title>
 
         <description>
-           <locale group='quiqqer/verification' var='package.description'/>
+            <locale group="quiqqer/verification" var="package.description"/>
         </description>
     </package>
 
+    <image src="URL_OPT_DIR/quiqqer/verification/bin/images/Logo.jpg"/>
 
     <support>
         <email><![CDATA[support@pcsg.de]]></email>
@@ -20,6 +21,7 @@
 
     <copyright>
         <name><![CDATA[PCSG - Computer & Internet Service OHG]]></name>
-        <license><![CDATA[GPL-3.0+]]></license>
+        <license><![CDATA[PCSG QL-1.0]]></license>
+        <license><![CDATA[CC BY-NC-SA 4.0]]></license>
     </copyright>
 </quiqqer>
