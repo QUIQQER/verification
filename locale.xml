@@ -30,6 +30,7 @@
         <locale name="settings.category.title">
             <de><![CDATA[Einstellungen]]></de>
             <en><![CDATA[Settings]]></en>
+        </locale>
         <locale name="settings.title">
             <de><![CDATA[Einstellungen]]></de>
             <en><![CDATA[Settings]]></en>
