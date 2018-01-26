@@ -42,8 +42,7 @@ We will try to respond to your request and forward it to the responsible develop
 
 License
 -------
-
-GPL-3.0+
+PCSG QL-1.0, CC BY-NC-SA 4.0
 
 Usage
 --------
