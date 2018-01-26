@@ -34,6 +34,7 @@ class Verifier
      * @return string - Verification URL
      *
      * @throws QUI\Verification\Exception
+     * @throws QUI\Exception
      */
     public static function startVerification(VerificationInterface $Verification, $overwriteExisting = false)
     {
@@ -84,9 +85,9 @@ class Verifier
         $verificationId = QUI::getPDO()->lastInsertId();
 
         $url = $VerifierSite->getUrlRewrittenWithHost(array(), array(
-                'verificationId' => $verificationId,
-                'hash'           => $hash
-            ));
+            'verificationId' => $verificationId,
+            'hash'           => $hash
+        ));
 
         // save url in tbl
         QUI::getDataBase()->update(
@@ -135,6 +136,95 @@ class Verifier
         $data['additionalData'] = json_decode($data['additionalData'], true);
 
         return $data;
+    }
+
+    /**
+     * Get Verification data
+     *
+     * @param VerificationInterface $Verification
+     * @return array - Data of Verification
+     *
+     * @throws QUI\Verification\Exception
+     */
+    protected static function getVerificationDataByObject(VerificationInterface $Verification)
+    {
+        $result = QUI::getDataBase()->fetch(array(
+            'from'  => self::getDatabaseTable(),
+            'where' => array(
+                'identifier' => self::getUniqueIdentifier(
+                    $Verification->getIdentifier(),
+                    $Verification::getType()
+                )
+            )
+        ));
+
+        if (empty($result)) {
+            throw new QUI\Verification\Exception(array(
+                'quiqqer/verification',
+                'exception.verifier.verification.not_started'
+            ));
+        }
+
+        $data                   = current($result);
+        $data['additionalData'] = json_decode($data['additionalData'], true);
+
+        return $data;
+    }
+
+    /**
+     * Check if a Verification is can still be verified
+     *
+     * @param VerificationInterface $Verification
+     * @return bool
+     *
+     * @throws QUI\Verification\Exception
+     */
+    public static function isVerificationValid(VerificationInterface $Verification)
+    {
+        $data = self::getVerificationDataByObject($Verification);
+
+        if (empty($data['validUntilDate'])) {
+            return true;
+        }
+
+        $Now        = new \DateTime();
+        $ValidUntil = new \DateTime($data['validUntilDate']);
+
+        return $ValidUntil > $Now;
+    }
+
+    /**
+     * Get Verification ID by identifier
+     *
+     * @param string $identifier - Verification identifier
+     * @param string $type - Verification type ($VerificationClass::getType())
+     * @return int
+     *
+     * @throws QUI\Verification\Exception
+     */
+    protected static function getVerificationIdByIdentifier($identifier, $type)
+    {
+        $result = QUI::getDataBase()->fetch(array(
+            'select' => array(
+                'id',
+            ),
+            'from'   => self::getDatabaseTable(),
+            'where'  => array(
+                'identifier' => self::getUniqueIdentifier($identifier, $type)
+            )
+        ));
+
+        if (empty($result)) {
+            throw new QUI\Verification\Exception(array(
+                'quiqqer/verification',
+                'exception.verifier.verification.does.not.exists',
+                array(
+                    'identifier' => $identifier
+                )
+            ));
+        }
+
+        return (int)$result[0]['id'];
     }
 
     /**

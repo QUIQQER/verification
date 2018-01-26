@@ -2,10 +2,12 @@
 
 namespace QUI\Verification;
 
+use QUI;
+
 abstract class AbstractVerification implements VerificationInterface
 {
     /**
-     * Unique Verification identifier
+     * Verification identifier
      *
      * @var string|int
      */
@@ -31,7 +33,7 @@ abstract class AbstractVerification implements VerificationInterface
     }
 
     /**
-     * Get a unique identifier that identifies this Verification
+     * Get a identifier of this Verification
      *
      * @return string|int
      */
