@@ -2,6 +2,18 @@
 <p class="content-message-success">
     {$msg}
 </p>
+
+<script>
+    require(['qui/QUI'], function (QUI) {
+        QUI.fireEvent('quiqqerVerifierSuccess', ["{$Verification->getType()}"]);
+
+        QUI.setAttribute(
+            'QUIQQER_VERIFIER_SUCCESS',
+            "{$Verification->getType()}"
+        );
+    });
+</script>
+
 {else}
 <p class="content-message-error">
     {$msg}

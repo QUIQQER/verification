@@ -5,17 +5,17 @@ use QUI\Security\Encryption;
 
 function redirect($target)
 {
-    header('Location: ' . $target);
+    header('Location: '.$target);
     exit;
 }
 
 if (empty($_REQUEST['hash'])
     || empty($_REQUEST['verificationId'])
 ) {
-    $Engine->assign(array(
+    $Engine->assign([
         'msg'     => QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.general'),
         'success' => false
-    ));
+    ]);
 
     return;
 }
@@ -28,10 +28,10 @@ $errorReason    = Verifier::ERROR_REASON_INVALID_REQUEST;
 try {
     $verificationData = Verifier::getVerificationData($verificationId);
 } catch (\Exception $Exception) {
-    $Engine->assign(array(
+    $Engine->assign([
         'msg'     => QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.general'),
         'success' => false
-    ));
+    ]);
 
     return;
 }
@@ -70,7 +70,7 @@ if ($success) {
     } catch (\Exception $Exception) {
         QUI\System\Log::addError(
             'Verification onSuccess error: "'
-            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+            .$verificationData['source'].'" (identifier: '.$identifier.')'
         );
 
         QUI\System\Log::writeException($Exception);
@@ -86,7 +86,7 @@ if ($success) {
     } catch (\Exception $Exception) {
         QUI\System\Log::addError(
             'Verification getOnSuccessRedirectUrl error: "'
-            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+            .$verificationData['source'].'" (identifier: '.$identifier.')'
         );
 
         QUI\System\Log::writeException($Exception);
@@ -97,7 +97,7 @@ if ($success) {
     } catch (\Exception $Exception) {
         QUI\System\Log::addError(
             'Verification getSuccessMessage error: "'
-            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+            .$verificationData['source'].'" (identifier: '.$identifier.')'
         );
 
         QUI\System\Log::writeException($Exception);
@@ -114,7 +114,7 @@ if ($success) {
     } catch (\Exception $Exception) {
         QUI\System\Log::addError(
             'Verification onError error: "'
-            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+            .$verificationData['source'].'" (identifier: '.$identifier.')'
         );
 
         QUI\System\Log::writeException($Exception);
@@ -130,7 +130,7 @@ if ($success) {
     } catch (\Exception $Exception) {
         QUI\System\Log::addError(
             'Verification getOnErrorRedirectUrl error: "'
-            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+            .$verificationData['source'].'" (identifier: '.$identifier.')'
         );
 
         QUI\System\Log::writeException($Exception);
@@ -142,18 +142,19 @@ if ($success) {
     } catch (\Exception $Exception) {
         QUI\System\Log::addError(
             'Verification getErrorMessage error: "'
-            . $verificationData['source'] . '" (identifier: ' . $identifier . ')'
+            .$verificationData['source'].'" (identifier: '.$identifier.')'
         );
 
         QUI\System\Log::writeException($Exception);
     }
 
     if (empty($msg)) {
-        $msg = QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.' . $errorReason);
+        $msg = QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.'.$errorReason);
     }
 }
 
-$Engine->assign(array(
-    'msg'     => $msg,
-    'success' => $success
-));
+$Engine->assign([
+    'msg'          => $msg,
+    'success'      => $success,
+    'Verification' => $Verification
+]);
