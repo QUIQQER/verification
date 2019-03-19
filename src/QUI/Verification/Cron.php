@@ -90,6 +90,10 @@ class Cron
             $deleteIds[] = $row['id'];
         }
 
+        if (empty($deleteIds)) {
+            return;
+        }
+
         QUI::getDataBase()->delete(
             Verifier::getDatabaseTable(),
             [
