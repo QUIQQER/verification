@@ -16,21 +16,22 @@ class Cron
      * that have been verified a certain amount of days before now
      *
      * @return void
+     * @throws \QUI\Exception
      */
     public static function deleteVerified()
     {
-        $result = QUI::getDataBase()->fetch(array(
-            'select' => array(
+        $result = QUI::getDataBase()->fetch([
+            'select' => [
                 'id',
                 'verifiedDate'
-            ),
+            ],
             'from'   => Verifier::getDatabaseTable(),
-            'where'  => array(
+            'where'  => [
                 'verified' => 1
-            )
-        ));
+            ]
+        ]);
 
-        $deleteIds   = array();
+        $deleteIds   = [];
         $Conf        = QUI::getPackage('quiqqer/verification')->getConfig();
         $verifiedTtl = (int)$Conf->get('settings', 'keepVerifiedDuration'); // days
         $verifiedTtl *= 24 * 60 * 60; // seconds
@@ -51,12 +52,52 @@ class Cron
 
         QUI::getDataBase()->delete(
             Verifier::getDatabaseTable(),
-            array(
-                'id' => array(
+            [
+                'id' => [
                     'type'  => 'IN',
                     'value' => $deleteIds
-                )
-            )
+                ]
+            ]
+        );
+    }
+
+    /**
+     * Delete all unverified Verification entries from database
+     * that have exceeded their "valid until" date
+     *
+     * @return void
+     * @throws \QUI\Exception
+     */
+    public static function deleteUnverified()
+    {
+        $result = QUI::getDataBase()->fetch([
+            'select' => [
+                'id'
+            ],
+            'from'   => Verifier::getDatabaseTable(),
+            'where'  => [
+                'verified'       => 0,
+                'validUntilDate' => [
+                    'type'  => '<=',
+                    'value' => date('Y-m-d H:i:s')
+                ]
+            ]
+        ]);
+
+        $deleteIds = [];
+
+        foreach ($result as $row) {
+            $deleteIds[] = $row['id'];
+        }
+
+        QUI::getDataBase()->delete(
+            Verifier::getDatabaseTable(),
+            [
+                'id' => [
+                    'type'  => 'IN',
+                    'value' => $deleteIds
+                ]
+            ]
         );
     }
 }

@@ -3,10 +3,19 @@
 
     <cron exec="\QUI\Verification\Cron::deleteVerified">
         <title>
-            <locale group="quiqqer/verification" var="cron.title" />
+            <locale group="quiqqer/verification" var="cron.deleteVerified.title" />
         </title>
         <description>
-            <locale group="quiqqer/verification" var="cron.description" />
+            <locale group="quiqqer/verification" var="cron.deleteVerified.description" />
+        </description>
+    </cron>
+
+    <cron exec="\QUI\Verification\Cron::deleteUnverified">
+        <title>
+            <locale group="quiqqer/verification" var="cron.deleteUnverified.title" />
+        </title>
+        <description>
+            <locale group="quiqqer/verification" var="cron.deleteUnverified.description" />
         </description>
     </cron>
 
