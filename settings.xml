@@ -11,7 +11,7 @@
                 </conf>
                 <conf name="keepVerifiedDuration">
                     <type><![CDATA[integer]]></type>
-                    <defaultvalue>72</defaultvalue>
+                    <defaultvalue>3</defaultvalue>
                 </conf>
             </section>
 

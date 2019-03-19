@@ -53,13 +53,29 @@
         </locale>
 
         <!-- Cron -->
-        <locale name="cron.title">
+        <locale name="cron.deleteVerified.title">
             <de><![CDATA[Verifikations-Modul: Verifizierte Daten löschen]]></de>
             <en><![CDATA[Verification module: Delete verified data]]></en>
         </locale>
-        <locale name="cron.description">
+        <locale name="cron.deleteVerified.description">
             <de><![CDATA[Löscht alle bereits verifizierten Daten, die älter als X Tage sind (s. Einstellungen)]]></de>
             <en><![CDATA[Deletes all verified data that is older than X days (see settings)]]></en>
+        </locale>
+        <locale name="cron.deleteVerified.title">
+            <de><![CDATA[Verifikations-Modul: Verifizierte Daten löschen]]></de>
+            <en><![CDATA[Verification module: Delete verified data]]></en>
+        </locale>
+        <locale name="cron.deleteVerified.description">
+            <de><![CDATA[Löscht alle bereits verifizierten Vorgänge, die älter als X Tage sind (s. Einstellungen)]]></de>
+            <en><![CDATA[Deletes all verifications that are older than X days (see settings)]]></en>
+        </locale>
+        <locale name="cron.deleteUnverified.title">
+            <de><![CDATA[Verifikations-Modul: Unverifizierte Vorgänge löschen]]></de>
+            <en><![CDATA[Verification module: Delete unverified verifications]]></en>
+        </locale>
+        <locale name="cron.deleteUnverified.description">
+            <de><![CDATA[Löscht alle Verifizierungs-Vorgänge, die ungültig geworden sind]]></de>
+            <en><![CDATA[Deletes all unverified verifications that expired]]></en>
         </locale>
 
     </groups>
