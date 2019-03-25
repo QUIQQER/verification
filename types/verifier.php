@@ -74,6 +74,13 @@ if ($success) {
         );
 
         QUI\System\Log::writeException($Exception);
+
+        $Engine->assign([
+            'msg'     => QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.general'),
+            'success' => false
+        ]);
+
+        return;
     }
 
     // onSuccess redirect
@@ -118,6 +125,13 @@ if ($success) {
         );
 
         QUI\System\Log::writeException($Exception);
+
+        $Engine->assign([
+            'msg'     => QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.general'),
+            'success' => false
+        ]);
+
+        return;
     }
 
     // onError redirect
