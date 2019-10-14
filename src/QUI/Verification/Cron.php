@@ -72,7 +72,8 @@ class Cron
     {
         $result = QUI::getDataBase()->fetch([
             'select' => [
-                'id'
+                'id',
+                'identifier'
             ],
             'from'   => Verifier::getDatabaseTable(),
             'where'  => [
@@ -88,6 +89,13 @@ class Cron
 
         foreach ($result as $row) {
             $deleteIds[] = $row['id'];
+
+            QUI::getEvents()->fireEvent(
+                'quiqqerVerificationDeleteUnverified',
+                [
+                    Verifier::getIdentifierFromUniqueIdentifier($row['identifier'])
+                ]
+            );
         }
 
         if (empty($deleteIds)) {
