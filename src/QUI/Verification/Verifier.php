@@ -40,13 +40,13 @@ class Verifier
     {
         if (self::existsVerification($Verification)) {
             if ($overwriteExisting !== true) {
-                throw new QUI\Verification\Exception(array(
+                throw new QUI\Verification\Exception([
                     'quiqqer/verification',
                     'exception.verifier.verification.already.exists',
-                    array(
+                    [
                         'identifier' => $Verification->getIdentifier()
-                    )
-                ));
+                    ]
+                ]);
             }
 
             self::removeVerification($Verification);
@@ -62,7 +62,7 @@ class Verifier
 
         // calculate duration
         $end = strtotime(
-            self::getFormattedTimestamp() . ' +' . $validDuration . ' minute'
+            self::getFormattedTimestamp().' +'.$validDuration.' minute'
         );
 
         $hash         = self::generateVerificationHash();
@@ -73,31 +73,31 @@ class Verifier
             $Verification::getType()
         );
 
-        QUI::getDataBase()->insert(self::getDatabaseTable(), array(
+        QUI::getDataBase()->insert(self::getDatabaseTable(), [
             'identifier'       => $uniqueIdentifier,
             'additionalData'   => json_encode($Verification->getAdditionalData()),
             'verificationHash' => Encryption::encrypt($hash),
             'createDate'       => self::getFormattedTimestamp(),
             'validUntilDate'   => self::getFormattedTimestamp($end),
             'source'           => $Verification::getType(),
-        ));
+        ]);
 
         $verificationId = QUI::getPDO()->lastInsertId();
 
-        $url = $VerifierSite->getUrlRewrittenWithHost(array(), array(
+        $url = $VerifierSite->getUrlRewrittenWithHost([], [
             'verificationId' => $verificationId,
             'hash'           => $hash
-        ));
+        ]);
 
         // save url in tbl
         QUI::getDataBase()->update(
             self::getDatabaseTable(),
-            array(
+            [
                 'verificationUrl' => Encryption::encrypt($url)
-            ),
-            array(
+            ],
+            [
                 'id' => $verificationId
-            )
+            ]
         );
 
         return $url;
@@ -113,21 +113,21 @@ class Verifier
      */
     public static function getVerificationData($verificationId)
     {
-        $result = QUI::getDataBase()->fetch(array(
+        $result = QUI::getDataBase()->fetch([
             'from'  => self::getDatabaseTable(),
-            'where' => array(
+            'where' => [
                 'id' => $verificationId
-            )
-        ));
+            ]
+        ]);
 
         if (empty($result)) {
-            throw new QUI\Verification\Exception(array(
+            throw new QUI\Verification\Exception([
                 'quiqqer/verification',
                 'exception.verifier.verification.id_does_not_exist',
-                array(
+                [
                     'verificationId' => $verificationId
-                )
-            ));
+                ]
+            ]);
         }
 
         $data = current($result);
@@ -148,21 +148,21 @@ class Verifier
      */
     protected static function getVerificationDataByObject(VerificationInterface $Verification)
     {
-        $result = QUI::getDataBase()->fetch(array(
+        $result = QUI::getDataBase()->fetch([
             'from'  => self::getDatabaseTable(),
-            'where' => array(
+            'where' => [
                 'identifier' => self::getUniqueIdentifier(
                     $Verification->getIdentifier(),
                     $Verification::getType()
                 )
-            )
-        ));
+            ]
+        ]);
 
         if (empty($result)) {
-            throw new QUI\Verification\Exception(array(
+            throw new QUI\Verification\Exception([
                 'quiqqer/verification',
                 'exception.verifier.verification.not_started'
-            ));
+            ]);
         }
 
         $data                   = current($result);
@@ -204,24 +204,24 @@ class Verifier
      */
     protected static function getVerificationIdByIdentifier($identifier, $type)
     {
-        $result = QUI::getDataBase()->fetch(array(
-            'select' => array(
+        $result = QUI::getDataBase()->fetch([
+            'select' => [
                 'id',
-            ),
+            ],
             'from'   => self::getDatabaseTable(),
-            'where'  => array(
+            'where'  => [
                 'identifier' => self::getUniqueIdentifier($identifier, $type)
-            )
-        ));
+            ]
+        ]);
 
         if (empty($result)) {
-            throw new QUI\Verification\Exception(array(
+            throw new QUI\Verification\Exception([
                 'quiqqer/verification',
                 'exception.verifier.verification.does.not.exists',
-                array(
+                [
                     'identifier' => $identifier
-                )
-            ));
+                ]
+            ]);
         }
 
         return (int)$result[0]['id'];
@@ -239,32 +239,32 @@ class Verifier
      */
     public static function getVerificationByIdentifier($identifier, $type, $unverifiedOnly = false)
     {
-        $where = array(
+        $where = [
             'identifier' => self::getUniqueIdentifier($identifier, $type)
-        );
+        ];
 
         if ($unverifiedOnly === true) {
             $where['verified'] = 0;
         }
 
-        $result = QUI::getDataBase()->fetch(array(
-            'select' => array(
+        $result = QUI::getDataBase()->fetch([
+            'select' => [
                 'identifier',
                 'source',
                 'additionalData'
-            ),
+            ],
             'from'   => self::getDatabaseTable(),
             'where'  => $where
-        ));
+        ]);
 
         if (empty($result)) {
-            throw new QUI\Verification\Exception(array(
+            throw new QUI\Verification\Exception([
                 'quiqqer/verification',
                 'exception.verifier.verification.does.not.exists',
-                array(
+                [
                     'identifier' => $identifier
-                )
-            ));
+                ]
+            ]);
         }
 
         $data = current($result);
@@ -288,14 +288,35 @@ class Verifier
     {
         QUI::getDataBase()->delete(
             self::getDatabaseTable(),
-            array(
+            [
                 'identifier' => self::getUniqueIdentifier(
                     $Verification->getIdentifier(),
                     $Verification::getType()
                 ),
                 'source'     => $Verification::getType()
-            )
+            ]
         );
+    }
+
+    /**
+     * Get verification URL
+     *
+     * @param VerificationInterface $Verification
+     * @return false|string
+     */
+    public static function getVerificationUrl(VerificationInterface $Verification)
+    {
+        try {
+            $data = self::getVerificationData(self::getUniqueIdentifier(
+                $Verification->getIdentifier(),
+                $Verification::getType()
+            ));
+        } catch (\Exception $Exception) {
+            QUI\System\Log::writeException($Exception);
+            return false;
+        }
+
+        return Encryption::decrypt($data['verificationUrl']);
     }
 
     /**
@@ -307,13 +328,13 @@ class Verifier
     {
         QUI::getDataBase()->update(
             self::getDatabaseTable(),
-            array(
+            [
                 'verified'     => 1,
                 'verifiedDate' => self::getFormattedTimestamp()
-            ),
-            array(
+            ],
+            [
                 'id' => $verificationId
-            )
+            ]
         );
     }
 
@@ -326,17 +347,17 @@ class Verifier
     protected static function getVerifierSite()
     {
         $Project = QUI::getRewrite()->getProject();
-        $siteIds = $Project->getSitesIds(array(
-            'where' => array(
+        $siteIds = $Project->getSitesIds([
+            'where' => [
                 'type' => self::SITE_TYPE
-            )
-        ));
+            ]
+        ]);
 
         if (empty($siteIds)) {
-            throw new QUI\Verification\Exception(array(
+            throw new QUI\Verification\Exception([
                 'quiqqer/verification',
                 'exception.verifier.site.does.not.exist'
-            ));
+            ]);
         }
 
         return $Project->get($siteIds[0]['id']);
@@ -350,18 +371,18 @@ class Verifier
      */
     protected static function existsVerification(VerificationInterface $Verification)
     {
-        $result = QUI::getDataBase()->fetch(array(
-            'select' => array(
+        $result = QUI::getDataBase()->fetch([
+            'select' => [
                 'id'
-            ),
+            ],
             'from'   => self::getDatabaseTable(),
-            'where'  => array(
+            'where'  => [
                 'identifier' => self::getUniqueIdentifier(
                     $Verification->getIdentifier(),
                     $Verification::getType()
                 )
-            )
-        ));
+            ]
+        ]);
 
         return !empty($result);
     }
@@ -410,7 +431,7 @@ class Verifier
      */
     protected static function getUniqueIdentifier($identifier, $verificationType)
     {
-        return $identifier . '-' . mb_substr(hash('sha256', $verificationType), 0, 8);
+        return $identifier.'-'.mb_substr(hash('sha256', $verificationType), 0, 8);
     }
 
     /**
@@ -419,7 +440,7 @@ class Verifier
      * @param string $uniqueIdentifier
      * @return string
      */
-    protected static function getIdentifierFromUniqueIdentifier($uniqueIdentifier)
+    public static function getIdentifierFromUniqueIdentifier($uniqueIdentifier)
     {
         return mb_substr($uniqueIdentifier, 0, -9);
     }
