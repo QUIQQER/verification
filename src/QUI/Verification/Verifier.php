@@ -307,10 +307,7 @@ class Verifier
     public static function getVerificationUrl(VerificationInterface $Verification)
     {
         try {
-            $data = self::getVerificationData(self::getUniqueIdentifier(
-                $Verification->getIdentifier(),
-                $Verification::getType()
-            ));
+            $data = self::getVerificationDataByObject($Verification);
         } catch (\Exception $Exception) {
             QUI\System\Log::writeException($Exception);
             return false;

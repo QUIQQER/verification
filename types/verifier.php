@@ -29,7 +29,7 @@ try {
     $verificationData = Verifier::getVerificationData($verificationId);
 } catch (\Exception $Exception) {
     $Engine->assign([
-        'msg'     => QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.general'),
+        'msg'     => QUI::getLocale()->get('quiqqer/verification', 'message.types.verifier.error.not_found'),
         'success' => false
     ]);
 
@@ -53,12 +53,12 @@ if ($_REQUEST['hash'] === $expected) {
 
         if (time() <= $validUntil) {
             $success = true;
+
+            // Mark verification as finished
+            Verifier::finishVerification($verificationId);
         } else {
             $errorReason = Verifier::ERROR_REASON_EXPIRED;
         }
-
-        // delete verification from db
-        Verifier::finishVerification($verificationId);
     }
 }
 
