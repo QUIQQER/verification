@@ -113,6 +113,10 @@
             <de><![CDATA[Beim Verifizierungsvorgang ist ein unbekannter Fehler aufgetreten. Bitte versuchen Sie es später noch einmal oder starten sie den Vorgang erneut.]]></de>
             <en><![CDATA[An unknown error occurred during the verification process. Please try again later or restart the process.]]></en>
         </locale>
+        <locale name="message.types.verifier.error.not_found">
+            <de><![CDATA[Dieser Link ist nicht bzw. nicht mehr gültig. Bitte wiederholen Sie den Vorgang, den Sie bestätigen möchten.]]></de>
+            <en><![CDATA[This link is no longer valid. Please repeat the process you wish to confirm.]]></en>
+        </locale>
         <locale name="message.types.verifier.error.invalid_request">
             <de><![CDATA[Beim Verifizierungsvorgang konnte nicht bestätigt werden. Bitte versuchen Sie es später noch einmal oder starten sie den Vorgang erneut.]]></de>
             <en><![CDATA[An verification process could not be verified. Please try again later or restart the process.]]></en>
