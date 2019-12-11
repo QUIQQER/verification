@@ -2,7 +2,6 @@
     "name": "quiqqer\/verification",
     "type": "quiqqer-plugin",
     "description": "Verify any action via a special url with a unique hash (i.e. user registration, newsletter opt-in etc.)",
-    "version": "dev-master",
     "license": [
         "PCSG QL-1.0",
         "CC BY-NC-SA 4.0"
